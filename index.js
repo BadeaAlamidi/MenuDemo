@@ -25,6 +25,7 @@ switch(extensionName)
 	case '.json':contentType='application/json'; break;
 	case '.png':contentType='image/png'; break;
 	case '.jpg':contentType='image/jpg'; break;
+	case '.mp3':contentType="audio/mp3";break;
 	
 }
 fs.readFile(

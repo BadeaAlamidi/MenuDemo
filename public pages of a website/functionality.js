@@ -13,8 +13,8 @@ function playSignificance(){
 
 	audioElement=document.createElement("audio");
 	audioElement.setAttribute("autoplay","");
-	audioElement.setAttribute("src",'../2-01 Significance - Marina Kawano - Emi Evans.m4a');
-	audioElement.setAttribute("type","audio/mp4");
+	audioElement.setAttribute("src",'https://vgmdownloads.com/soundtracks/nier-automata-original-soundtrack/ypxppyfh/2-01%20Significance%20-%20Marina%20Kawano%20-%20Emi%20Evans.mp3');
+	audioElement.setAttribute("type","audio/mp3");
 	document.body.appendChild(audioElement);
 }
 function getRandomInteger(min, max) {
