@@ -14,7 +14,7 @@
             }
             body{margin:0;}
             .optionsViewport{
-                height:590px;
+                height:var(--viewportHeight);
                 margin: 0 0 0 10px;
             }
         </style>
@@ -59,5 +59,9 @@
             </div>
             <div class="bottomButton"></div>
         </div>
+        <script>
+            var viewport=(50*window.top.innerHeight/100)-20+'px';
+            document.getElementsByClassName("optionsViewport")[0].style.setProperty('--viewportHeight',viewport);
+        </script>
     </body>
 </html>
