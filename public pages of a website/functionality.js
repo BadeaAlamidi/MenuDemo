@@ -15,6 +15,7 @@ function playSignificance(){
 	audioElement.setAttribute("autoplay","");
 	audioElement.setAttribute("src",'../2-01 Significance - Marina Kawano - Emi Evans.m4a');
 	audioElement.setAttribute("type","audio/mp4");
+	document.body.appendChild(audioElement);
 }
 function getRandomInteger(min, max) {
 	min = Math.ceil(min);

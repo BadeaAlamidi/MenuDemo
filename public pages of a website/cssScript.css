@@ -1,6 +1,10 @@
-@font-face{
-    font-family:Rodin;
-    src:url("SCE-PS3-RD-R-LATIN.ttf");
+@font-face {
+    font-family: 'Rodin';
+    src: url('SCE-PS3-RD-R-LATIN.woff2') format('woff2');
+         /* ,url('sce-ps3-rd-r-latin-webfont.woff') format('woff'); */
+    font-weight: normal;
+    font-style: normal;
+
 }
 body{
     font-family:Rodin;
