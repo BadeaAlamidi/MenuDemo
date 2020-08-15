@@ -2,6 +2,7 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+var disableScroll = require("disable-scroll");
 const server = http.createServer((req,res)=>{
 //		if (req.url==='/')
 //			{
@@ -17,6 +18,15 @@ const server = http.createServer((req,res)=>{
 let filePath = path.join(__dirname, 'public pages of a website', req.url==='/'?'index.html':req.url);
 let extensionName = path.extname(filePath);
 let contentType = 'text/html';
+switch(extensionName)
+{
+	case '.js':contentType='text/javascript'; break;
+	case '.css':contentType='text/css'; break;
+	case '.json':contentType='application/json'; break;
+	case '.png':contentType='image/png'; break;
+	case '.jpg':contentType='image/jpg'; break;
+	
+}
 fs.readFile(
 filePath, (err, content)=>{
 				if (err) {
@@ -24,14 +34,15 @@ filePath, (err, content)=>{
 					   fs.readFile(
 							path.join(__dirname,'public pages of a website','not found page.html'),(err,content)=> {
 																		if (err) throw err; 
-																		res.writeHead(200,{'Content-Type': 'text/html'});
+																		res.writeHead(200,{'Content-Type': contentType});
 																		res.end(content,'utf8');
 																		}
 							);
 					   else {res.writeHead(500); res.end(`server error: ${err}`);}
 			  		 } 
 				else {
-					res.writeHead(200,{'Content-Type': 'text/html'});
+					res.writeHead(200,{'Content-Type': contentType});
+					
 					res.end(content);
 					}
 			  }

@@ -1,0 +1,682 @@
+@font-face{
+    font-family:Rodin;
+    src:url("SCE-PS3-RD-R-LATIN.ttf");
+}
+body{
+    font-family:Rodin;
+}
+div#header{
+    display:flex;
+    width:90%;
+    height:6vh;
+    margin:0px auto 0px auto;
+    justify-content: space-between;
+}
+div#header::before{
+    height:4.6vh;
+    width:4px;
+    content:'';
+    display:inline-block;
+}
+.tab{
+    width: 11.3%;/*120px*/
+    height: 4.6vh;
+    opacity:0;
+    /* align-self:center; */
+    background-color:#B2AC98;
+}
+.tab .buttonWrapper{
+    justify-content: space-around;
+}
+
+#titleWrapper{
+    position:absolute;
+    top:11vh;
+    right:0;
+    left:0;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:0;
+    width:90%;
+    color:#4A4640;
+}
+#title{
+    display:inline;
+    font-size:4vh;
+    font-weight:normal;
+    text-shadow: 8px 10px #00000040;
+}
+#subTitle{
+    display:inline;
+    font-size: 2.1vh;
+    font-weight:normal;
+}
+#tab1nestedContentWrapper{
+    width:90%;
+    position:absolute;
+    /* overflow-y:hidden; */
+    top:50%;
+    left:0;
+    right:0;
+    /* height:53vh; */
+    margin:-318px auto 0px auto;/*margin-top:calc(50vh - 396.56px)*/
+    /* border:solid; */
+    display:none;
+    grid-template:'. doctabs . header' 4.6vh
+                  '. doctabs . document' 610px 
+                  / 11px 30% auto 63.7%;
+}
+#tab1nestedContentWrapper::before{
+    content:'';
+    grid-row:1/-1;
+}
+#nestedContentSidebar{
+    margin-left:7%;
+    grid-area:doctabs;
+    overflow-y: hidden;
+    box-shadow:5px 5px #00000080;
+}
+.sidebar{
+    display:grid;
+    background-color: #CDC7BA;
+    grid-template: '. .'10px
+                   '. .' auto
+                   '. .'10px
+                   / calc(100% - 30px) 30px;
+}
+.sidebar::before,.sidebar::after{
+ content:'';
+ border:none !important;
+ height:5px;
+ width:calc(100% - 15px);
+ margin:2.5px 0 2.5px auto;
+ background-color: #c1baa4;
+}
+.sidebar::before{
+    grid-area: 1/1/2/2;
+}
+.sidebar::after{
+    grid-area: 3 / 1 / 4 /2; 
+}
+.optionsViewport{
+    grid-area: 2/1/3/2;
+    overflow-y:hidden;
+    position:relative;
+}
+.topButton{
+    grid-area:1 / 2 / 2 /3;
+}
+.sidebarGutter{
+ grid-area:2/2/3/3;
+}
+div.grip{
+    position:relative;
+    top:0;
+}
+svg.grip{
+    pointer-events: none;
+}
+.bottomButton{
+    grid-area: 3/2/4/3;
+}
+.optionsContainer{
+    position:absolute;
+    width:100%;
+    padding:10px 0;
+}
+#tab1nestedContent{
+    /* border:solid;  */
+    position: absolute;/*this is to allow the top property to make an effect*/
+    /* height: 625px; */
+    width:100%;
+    /* overflow-y: scroll; */
+    /* overflow-x: hidden; */
+    /*text-align: left;*/
+    /* left:5%; */
+    padding:10px 0;
+}
+.nested{
+    width:100%;/*360px*/
+    height:4.6vh;
+   /* text-align:left;*/
+}
+.tab1{
+    height:4.6vh;
+    width:100%;
+    display:block;
+    opacity:0;
+    position:relative;
+    right:14%;
+    margin-bottom:2.9vh;
+    background-color:#B2AC98;
+    /* transform:translate(0px) */
+}
+.tab1 .svgElement,.nested .svgElement{
+    margin: 0px 10px;
+}
+.tab1:hover{
+    box-shadow:10px 5px 5px #00000080;
+}
+#tab1DocumentHeader{
+    display:none;
+    /* padding:0px 10px 0px 5px; */
+    grid-area:header;
+    margin:0px;
+    font-size:200%;
+    font-weight:normal;
+    line-height:200%;
+    width:100%;
+    max-width: 53vw;
+    justify-self:end;
+    background-color:#B2AC98;
+    color:#4A4640;
+    fill:#4A4640;
+    transition: color 84ms, fill 84ms, background-color 167ms; 
+}
+#tab1DocumentHeader .svgElement{
+    margin:0 10px;
+}
+ /* #tab1Document{
+    display:none;
+    border: 2px solid; was commented
+    padding: 10px 10px 10px 5px; was commented
+    grid-area:document;
+    width:100%;
+    max-width:53vw;
+    justify-self:end;
+} */
+iframe#tab1Document{
+    width:100%;
+    height:100%;
+    display:none;
+    grid-area:document;
+    max-width:53vw;
+    justify-self:end;
+    border:0;
+}
+div#guide{
+    --guideOpacity:0;
+    opacity:var(--guideOpacity);
+    position:absolute;
+    /* border:2px solid #000000; */
+    /* text-align:left ; */
+    /* font-size: larger; */
+    display:flex;
+    /* line-height:2em; */
+    width:90%;
+    background: #CDC7BA;
+    color: #4A4640;
+    height:7vh;
+    bottom:0;
+    left:0px;
+    right:0px;
+    margin-left:auto;
+    margin-right:auto;
+    overflow: hidden;
+    box-shadow:5px 5px #00000080;
+}
+
+#guide::before{
+    content:'';
+    border-color:#4A4640 ;
+    width:4px;
+    margin-right:2%;
+    display:inline-block;
+}
+#instruction{
+    width:50%;
+    line-height: 200%;
+    font-size: 200%;
+    text-align: left;
+    align-self:center;
+}
+#guideButtons{
+    position:relative;
+    margin-left:auto;
+    align-self:center;
+    display:flex;
+}
+#guideButtons>div{
+    align-self:center;
+    font-size:200%;
+    line-height:200%;
+}
+#guideButtons>svg{
+    align-self:center;
+    width:2.5vw;
+    height:1.5vw;
+}
+#guide>svg{
+    width:1.5vw;
+    height:1.5vw;
+    align-self:flex-end;
+}
+div#topBanner{
+    position:absolute;
+    height: calc(3vh - 5px);
+    width:0;
+    border-width:5px 0 0 0;
+    border-style: solid;
+    border-color:#4A4640;
+    overflow-x:hidden;
+    right:0;
+}
+div#bottomBanner{
+    position:absolute;
+    height: calc(3vh - 5px);
+    width:0;
+    border-width:5px 0 0 0;
+    border-style: solid;
+    border-color:#4A4640;
+    overflow-x:hidden;
+    bottom:3.4vh;
+}
+svg.patternContainer{
+    position:absolute;
+      height:2.5vh;
+      display:block;
+      margin:0 auto;
+    
+    }
+    rect.patternRect{
+      width:100%;
+      height:2.5vh;
+    }
+div#tab2Content{
+    /*position:absolute;*/
+    /* height: 318px; */
+    display:grid;
+    /*left:5%;*/
+    /*width:100%;*/
+    margin-top: 10vh;
+    grid-template:'. pod1 .' 8.8vh
+                  '. pod2 .' 8.8vh
+                  '. pod3 .' 8.8vh;
+    
+    grid-template-columns:11px minmax(27vw,auto) 2.5vw; 
+    gap: 3vh 0px;
+    --selectedPod:1;
+    --afterVisibility:0;
+    /*top:294px;*/
+}
+#tab2Content::before{
+    content:"";
+    grid-row:1/-1;
+}
+#tab2Content::after{
+    opacity:var(--afterVisibility);
+    content:"";
+    border-width:4.4vh 0 4.4vh 2.5vw;
+    border-style:solid;
+    border-color:transparent #4A4640;
+    grid-row:var(--selectedPod);
+    grid-column:3;
+    width:0;
+    height:0;
+
+}
+span.tab2{
+    line-height:2;
+    grid-column:2;
+    grid-row:auto;
+    margin-left:5%;
+    background-color:#B2AC98;
+    color:#4A4640;
+    fill:#4A4640;
+    transition: color 84ms, fill 84ms, background-color 167ms; 
+    /*display:inline-block;*/
+}
+#tab2Pod1, #tab2Pod2, #tab2Pod3{
+    position: relative;
+}
+/* strange padding was added here since svg doesn't not look right on edge when there's padding ( this could just be a problem with codepen.io and not edge ) */
+#tab2Pod1>*, #tab2Pod2>*, #tab2Pod3>*{
+    pointer-events:none;
+    padding:0 10px 10px 0;
+}
+.podText{
+    position:absolute;
+    font-size:200%;
+}
+.leftPodText{
+    left:0;
+    top:0;
+    padding-left:10px;
+}
+.rightPodText{
+    top:0;
+    right:0;
+}
+.programName{
+    bottom:0;
+    left:0;
+    width:calc(100% - 20px);
+    display:flex;
+    height:36px;
+}
+.programName svg{
+    height:36px;
+    margin-left: 10px;
+}
+.programName div{
+    align-self:center;
+    margin-left: 10px;
+}
+#tab2Pod1{
+    grid-area:pod1;
+}
+#tab2Pod2{
+    grid-area:pod2;
+}
+#tab2Pod3{
+    grid-area:pod3;
+}
+/* div#tab2Midmenu{
+    /* position:relative; */
+    /* height:477px; */
+    /*left:35%;*/
+    /* border:solid; */
+    /* width:calc(92% - 11px); */
+    /* display:inline-block; */
+    /* overflow-y:scroll; */
+    /* padding:10px 0px; */
+    /* overflow-x:hidden; */
+    /* max-width: 340px; 
+} */
+div#midMenuSidebar{
+    width:100%;
+    /* max-width:340px; */
+    margin-left:8%;
+    box-shadow:5px 5px #00000080;
+}
+div#tab2MidmenuWrapper{
+    /* border:solid; */
+    display:none;
+    margin-top:6vh;
+    height:calc(41.4vh + 40px);
+    width:30vw;
+}
+#tab2MidmenuWrapper::before{
+    content:'';
+    /*     height: 100; for some reason this ::before is right by itself*/ 
+    width:4px;
+    display:inline-block;
+}
+div.tab2Option{
+    display:block;
+    height:4.6vh;
+    width:100%;
+    /* border: solid; */
+    /* padding-top:10px; */
+}
+
+iframe#descriptionContainer{
+    /*position:absolute;*/
+    display:none;
+    /*left:60%;*/
+    grid-column: 4;
+    width: 100%;
+    height:calc(41.4vh + 40px);
+    border:0;
+    top:235px;
+    max-width:340px;
+    margin-left:auto;
+    margin-top: 6vh;
+}
+#descriptionHeader{
+    line-height:200%;
+    font-size:200%;
+    font-weight:normal;
+    padding-left:10px;
+    color:#C4BEB5;
+    background-color:#4A4640;
+    margin-top:0px;
+    margin-bottom:0px;
+}
+#descriptionBody{
+    
+    margin:0px;
+    /* height:470px; */
+
+}
+#descriptionImage{
+    display:block;
+    margin-top:5%;
+    margin-right:auto;
+    width: 90%;
+    margin-left: auto;
+    /*max-width: 100%;*/
+    height:auto;
+    
+}
+#description{
+    padding:0px 5% 0px 5%;
+    margin-top:0px;
+    
+}
+line#line{
+    stroke-width:2;
+    stroke:#c1baa4;
+}
+svg#line{
+    height:20px;
+    /* padding-right:auto; FF trows error here*/
+    margin-left:auto;
+    
+}
+div#line{
+    width:90%;
+    margin-right:auto;
+    margin-left:auto;
+}
+.circle,.grip{
+    width: 100%;
+    height:100%;
+    display:block;
+}
+body{
+    margin-left:0px;
+}
+div#tab2Wrapper{
+    display:none;
+    grid-template-columns:34% 32% 4% 30%;
+    margin-left:auto;
+    margin-right:auto;
+    width: 90%;
+    margin-top:calc(17.2vh - 40px);
+}
+/*div#tab2WrapperPart{
+    display:grid;
+    grid-template-columns:44% 50%;
+    column-gap: 6%;
+}*/
+#tab1ContentWrapper{
+    /*     margin-top:calc(26.7vh - 118.440px); */
+        position:absolute;
+        left:0;
+        right:0;
+        top:50%;
+        /* border:solid; */
+        width:90%;
+        margin-top: -23.3vh;
+        margin-left:auto;
+        margin-right:auto;
+        height:42.1vh;
+        display:flex;
+        --beforeHeight:0%;
+    }
+
+#tab1ContentWrapper::before{
+    content:'';
+    display:inline-block;
+    height:var(--beforeHeight);
+    width:4px;
+    /* margin-left:5%; */
+    margin:auto 0 auto 0;
+}
+
+#tab1Content{
+    display:inline-block;
+    margin-left:2.4%;
+    width:26vw;
+    /* border:solid; */
+    /* height:calc(100% - 10px); */
+    overflow:show;
+    /* padding-top:10px; */
+}
+div:not(.button)::before{
+    border-right: 1px solid;
+    border-left:6px solid;
+    border-color:#999380;
+}
+span pre{
+    pointer-events:none;
+}
+#tab1DocumentHeader[data-pressed='true'],span.tab2[data-pressed='true']{
+    background-color: #4A4640;
+    color: #C4BEB5;
+    fill:#CDC7BA;
+}
+/*  
+    BUTTON CSS FROM CODEPEN.IO
+                                */
+.button{
+    position:relative;
+    /* width:605px; */
+    /* height:65px; */
+    /* background-color:#C4BEB5; */
+    /* top:50px; */
+    /* margin-bottom:3%; */
+    --distanceFromTitle:0;
+    --barWidth:0;
+    --symbolColor:#C4BEB5;
+    --textColor:#4A4640;
+    --psuedoElemOpacity:0;
+    --symbolBackColor:#4A4640;
+    --psuedoWidth:100%;
+  }
+  .bar{
+    position:absolute;
+    height:100%; 
+    width:var(--barWidth);
+    background-color:#4A4640;
+    transition: width 400ms cubic-bezier(0.25, 1, 0.5, 1), height 166ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .text{
+  /*   top:calc(50% - 2em); */
+    font-size:200%;
+  /*   height:100%; */
+    line-height:200%;
+    align-self:center;
+  /*   margin-left:4%; */
+  /*   background-color:green; */
+    color:var(--textColor);
+    transition: color 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .svgElement{
+    width:1.5vw;
+    align-self:center;
+  /*   margin:0 5% 0 3%;  */
+  }
+  use.icon{
+    fill: var(--symbolColor);
+    transition: fill 400ms;
+  }
+  use.iconBack{
+    fill:var(--symbolBackColor);
+    transition: fill 400ms;
+  }
+  .buttonWrapper{
+    position:absolute;
+    height:100%;
+    width:100%;
+  /*   width:calc(100% - 26px); */
+    display:flex;
+  /*   top:50%; */
+  /*   margin-top:-4em; */
+  /*   padding:0px 13px; */
+  }
+  .button::before,.button::after{
+    content:'';
+    position:absolute;
+    width:var(--psuedoWidth);
+    height:5px;
+    background-color:#4A4640;
+  /*   z-index:1; */
+    pointer-events:none;
+    opacity:var(--psuedoElemOpacity);
+    margin-left:auto;
+    right:0;
+  }
+  .button::before{
+    top:var(--distanceFromTitle);
+    transition:width 400ms cubic-bezier(0.25, 1, 0.5, 1), top 400ms cubic-bezier(0.25, 1, 0.5, 1),opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .button::after{
+    bottom:var(--distanceFromTitle);
+    transition:width 400ms cubic-bezier(0.25, 1, 0.5, 1), bottom 400ms cubic-bezier(0.25, 1, 0.5, 1),opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .button:hover{
+    --distanceFromTitle:-10px;
+    --barWidth:100%;
+    --symbolColor:#4A4640;
+    --psuedoElemOpacity:1;
+    --textColor:#C4BEB5;
+    --symbolBackColor:#C4BEB5;
+  }
+  .button[data-pressed="true"]{
+    --psuedoWidth:0;
+    --distanceFromTitle:-10px;
+    --barWidth:100%;
+    --symbolColor:#4A4640;
+    --psuedoElemOpacity:1;
+    --textColor:#C4BEB5;
+    --symbolBackColor:#C4BEB5;
+  
+  }
+  .button>*,.bottomButton>*,.topButton>*{
+      pointer-events: none;
+  }
+  .tab[data-pressed='true'] .bar{
+    height:6vh;
+
+  }
+  .tab[data-pressed='true']{
+    --psuedoWidth:100%;
+    --psuedoElemOpacity:0;
+}
+    /* BACKGROUND CONFIGURATION */
+#backgroundSVG,#bgPatternDiv{
+    pointer-events: none;
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+}
+
+.bgCircle{
+    width: 30%;
+    height: 30%;
+    fill:transparent;
+}
+.bgCircle,.bgLine{
+    transform:translate(0,0);
+    transition:transform 3500ms linear;
+}
+rect#bgPatternRect{
+    stroke:#c7c0a930;
+}
+#bgPatternDiv>svg{
+position:absolute;
+fill:transparent;
+}
+#bgPatternDiv{
+  z-index: 1;
+}
+#backgroundSVG{
+    z-index:-1;
+    background-color:#ccc5ad;
+}

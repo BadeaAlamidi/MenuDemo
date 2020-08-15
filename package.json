@@ -10,9 +10,12 @@
   "author": "Badea",
   "license": "ISC",
   "dependencies": {
+    "disable-scroll": "^0.5.1",
     "uuid": "^8.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "disable-scroll": "^0.5.1",
+    "nodemon": "^2.0.4",
+    "stickybits": "^3.7.7"
   }
 }

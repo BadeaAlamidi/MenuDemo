@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../cssScript.css" />
+    <style>
+        body{
+    font-family:Rodin;
+}
+        .optionsViewport {
+        --viewportHeight:0;
+        --viewportHeigntMinusHeader:calc(var(--viewportHeight) - var(--headerHeight));
+        height: calc(var(--viewportHeigntMinusHeader) + 30px);
+        }
+        .sidebar{
+            display:grid;
+            background-color: #CDC7BA;
+            --headerHeight:0;
+            grid-template: '. .'var(--headerHeight)
+                           '. .' 10px
+                           '. .' auto
+                           '. .'10px
+                           / calc(100% - 30px) 30px;
+        }
+        #descriptionHeader{
+        grid-area:1/1/2/3;
+        /* grid-area:header; */
+        }
+        .sidebar::before{
+            display:none;
+        }
+        .sidebar::after{
+            grid-area: 4 / 1 / 5 /2; 
+        }
+        div.optionsViewport{
+            grid-area: 2/1/4/2;
+            overflow-y:hidden;
+            position:relative;
+        }
+        .topButton{
+            grid-area:2 / 2 / 3 /3;
+        }
+        #demoGutter{
+            height:100%;
+         grid-area:3/2/4/3;
+        }
+    
+        .bottomButton{
+            grid-area: 4/2/5/3;
+        }
+        </style>
+    
+    <script type="text/javascript" src="../scrollFunctionality.js"></script>
+    <template class="svgCircle">
+        <svg class='circle' viewBox="0 0 10 10"> <circle cx="50%" cy="50%"r="2.5px" fill="#4A4640"/></svg>
+    </template>
+    <template class="gripTemplate">
+        <svg class = "grip" preserveAspectRatio="none" width="100%" height="100%" viewBox="0 0 100 100">
+            <line x1="50%" x2="50%" y1="0%" y2="100%" stroke-width="10px" stroke="#4A4640" stroke-linecap="round"/>
+        </svg>
+    </template>
+</head>
+
+<body id='descriptionBody'>
+    <div class="sidebar" id="contentSidebar" data-scrollable="true">
+        <h3 id="descriptionHeader" >demo1</h3>
+        <div class="optionsViewport">
+            <div class="optionsContainer" id="descriptionBody">
+                
+                <image id='descriptionImage' src="./demo1.png"></image>
+                <div id="line">
+                    <svg id='line' width="100%">
+                        <line id='line' x1="0%" x2="100% " y1="50%" y2="50%" /></svg>
+                </div>
+                <p id='description'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident,
+                    sunt in culpa qui officia deserunt mollit anim id
+                    est laborum.
+                </p>
+            </div>
+        </div>
+        <div class="topButton"></div>
+        <div id="demoGutter"class="sideBarGutter">
+            <div class="grip"></div>
+        </div>
+        <div class="bottomButton"></div>
+    </div>
+</body>
+<script>
+    // document.getElementById("descriptionHeader").style.height=(4.6*window.top.innerHeight/100)+'px'
+    var header=(4.6*window.top.innerHeight/100)+'px';
+    document.getElementsByClassName("sidebar")[0].style.setProperty('--headerHeight',header);
+    var viewport=(41.4*window.top.innerHeight/100)+'px';
+    document.getElementsByClassName("optionsViewport")[0].style.setProperty('--viewportHeight',viewport);
+</script>
+</html>
