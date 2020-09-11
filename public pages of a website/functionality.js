@@ -221,7 +221,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				animateText(document.getElementById("subTitle"),0,event.target.id,true);
 				animStart(fadeIn, 208, [document.getElementById("tab2MidmenuWrapper"), 'inline-flex']);//display('tab2MidmenuWrapper','inline-flex');
 				setSideBar(document.getElementById('midMenuSidebar'));
-				 scrollbarCollection[scrollbarCollection.length]= setScrolling(document.getElementById('midMenuSidebar'));}
+				scrollbarCollection[scrollbarCollection.length]= setScrolling(document.getElementById('midMenuSidebar'));}
+			Array.from(document.getElementsByClassName("tab2")).forEach((pod)=>{pod.dataset.pressed='false';}) //not a clever fix
 			event.target.dataset.pressed = 'true';
 			activePod = setPod(event.target.id);
 			animStart(updateProperty, 208, ['--afterVisibility', this]);

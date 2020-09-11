@@ -580,8 +580,8 @@ div:not(.button)::before{
   .svgElement{
     width:1.5vw;
     align-self:center;
-  /*   margin:0 5% 0 3%;  */
-  }
+    height: 36px;
+}
   use.icon{
     fill: var(--symbolColor);
     transition: fill 400ms;
