@@ -1,5 +1,5 @@
 // JavaScript source code
-'user strict';
+'use strict';
 // import disableScroll from 'disable-scroll';
 // const { on } = require("nodemon");
 // var activePod; //this is for tab2 to decide which pod has opened the midmenu so that the pod's text is altered. its value changes/is set by the setPod function
@@ -80,7 +80,7 @@ function setButton(element){//function to appened each element with the classnam
 }
 function setSideBar(sidebar){
 	var sidebarHeight;
-	sidebar.querySelector(".grip").style.height= sidebarHeight = sidebar.querySelector(".optionsViewport").getBoundingClientRect().height/sidebar.querySelector(".optionsContainer").getBoundingClientRect().height*100+"%";
+	sidebar.querySelector(".grip").style.height = sidebarHeight = sidebar.querySelector(".optionsViewport").getBoundingClientRect().height/sidebar.querySelector(".optionsContainer").getBoundingClientRect().height*100+"%";
 }
 function setGuideElements(instructionText,documentFragment){//documentFragment would be the document fragment imported from a template element in index.html that would later be appended. this isn't the case yet as there's only one button being used, (Esc)
 	guide.querySelector("#guideButtons").innerHTML=""; 
@@ -158,7 +158,7 @@ var header;
 var guide;
 var content1Wrapper;
 var tab1Options;
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById("tab1Document").contentWindow.addEventListener('keydown', (event) => {if (event.key == 'Escape' && stack.length != 0) { stack.pop().back(); }});
 	// var bgChildren=Array.from(document.getElementById("backgroundSVG").children);
 	var activePod;
@@ -333,6 +333,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			// scrollbarCollection.forEach((element)=>{resetScrolling(element);});
 			scrollbarCollection=[];
 			animStart(fadeOut, 192, [Array.from(document.getElementsByClassName("tabContent")), 1, `transTo${pushedButton.id}`]);
+
  
 		}
 	});
@@ -473,6 +474,8 @@ function reset() {
 	document.getElementById('tab1DocumentHeader').dataset.pressed=false;
 	Array.from(document.getElementsByClassName("tab2")).forEach((pod)=>{pod.dataset.pressed='false'});
 	Array.from(document.getElementsByClassName("nested")).forEach((archiveButton)=>{archiveButton.dataset.pressed='false';});
+	document.getElementById("nestedContentSidebar").dataset.scrollable="true";
+	document.getElementById("tab1nestedContent").style.pointerEvents=null;
 	document.getElementById("subTitle").textContent="";
 	// Array.from(document.getElementsByClassName("sidebar")).forEach((sidebar)=>{resetScrolling(sidebar)})
 }
