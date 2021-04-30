@@ -11,7 +11,7 @@ function addTostack(object) {
 }
 function playSignificance(){
 
-	audioElement=document.createElement("audio");
+	let audioElement=document.createElement("audio");
 	audioElement.setAttribute("autoplay","");
 	audioElement.setAttribute("src",'https://vgmdownloads.com/soundtracks/nier-automata-original-soundtrack/ypxppyfh/2-01%20Significance%20-%20Marina%20Kawano%20-%20Emi%20Evans.mp3');
 	audioElement.setAttribute("type","audio/mp3");
@@ -88,37 +88,55 @@ function setGuideElements(instructionText,documentFragment){//documentFragment w
 	if (documentFragment) { guide.querySelector("#guideButtons").appendChild(document.importNode(document.querySelector("template.guideButtonTemplate").content,true));
 	animStart(updateGuideButton,289);}
 }
-function setScrolling(element){//enable the grip (and content, through the grip) to respond to mouse input
-	var scrolling=false;
-	var grip=element.querySelector(".grip");
-	var gutter=element.querySelector('.sideBarGutter');
-	var content= element.querySelector('.optionsContainer');
-    var arrowButtons=[element.querySelector(".topButton"),element.querySelector(".bottomButton")];
-	var mouseGripdistance;
+
+function mouseUpFunction(e){/*scrolling=false;*/ document.documentElement.dataset.scrolling = "false"; console.log(element);console.log("mouseup");}
+function mouseDownFunction(e){
+	if (e.target.className==='grip'){
+	let grip = e.currentTarget.querySelector('.grip');
+	document.documentElement.dataset.scrolling = "true";
+	e.currentTarget.dataset.mouseGripdistance = e.clientY-grip.getBoundingClientRect()["top"];
+	}
+}
+
+function mouseMoveFunction(e){
+	let element = e.currentTarget;
+	let grip = element.querySelector('.grip');
+	let gutter=element.querySelector('.sideBarGutter');
 	const yOffset=gutter.getBoundingClientRect()["top"];
-	var result=[];//used in resetscrolling in order to remove event listeners
-	element.addEventListener('mousedown',result[0]=function mouseDownFunction(e){if(e.target.className=="grip"){scrolling=true;mouseGripdistance=e.clientY-grip.getBoundingClientRect()["top"]; console.log(element);console.log("mousedown");} });
-	element.ownerDocument.addEventListener('mouseup',result[1]=function mouseUpFunction(){scrolling=false; console.log(element);console.log("mouseup");});
-	element.addEventListener('mousemove',result[2]=function mouseMoveFunction(e){if(scrolling && element.dataset.scrollable=="true"){
+	let arrowButtons=[element.querySelector(".topButton"), element.querySelector(".bottomButton")];
+	let mouseGripdistance = parseFloat(e.currentTarget.dataset.mouseGripdistance);
+	let content= element.querySelector('.optionsContainer');
+	
+	if(document.documentElement.dataset.scrolling==='true' && element.dataset.scrollable==="true"){
 		// if(grip.getBoundingClientRect()["top"]>=yOffset && grip.getBoundingClientRect()["bottom"]<=gutter.getBoundingClientRect()["bottom"])
 		if (e.clientY-yOffset-mouseGripdistance>=0 && e.clientY-yOffset-mouseGripdistance+grip.getBoundingClientRect()["height"]<=gutter.getBoundingClientRect()["height"])
 		{grip.style.top=(e.clientY-yOffset-mouseGripdistance)+'px'; 
 		// content.style.top=(grip.getBoundingClientRect()["bottom"]-grip.getBoundingClientRect()["height"]-yOffset)/(gutter.getBoundingClientRect()["height"]-grip.getBoundingClientRect()["height"])*-100+'%';
 		// content.style.top=-(grip.getBoundingClientRect()["bottom"]-grip.getBoundingClientRect()["height"]-yOffset)/(gutter.getBoundingClientRect()["height"]-grip.getBoundingClientRect()["height"])*(content.getBoundingClientRect()["bottom"]-gutter.getBoundingClientRect()["y"])+"px";
 		content.style.top=-(grip.getBoundingClientRect()["bottom"]-grip.getBoundingClientRect()["height"]-yOffset)/(gutter.getBoundingClientRect()["height"]-grip.getBoundingClientRect()["height"])*(content.getBoundingClientRect()["height"]-gutter.getBoundingClientRect()["height"])+"px";
-
+		
 		arrowButtons[0].style=null;
 		arrowButtons[1].style=null;
-		}
-		else{
-			// element.querySelector(`${grip.getBoundingClientRect()["bottom"]-grip.getBoundingClientRect()["height"]-yOffset==0?"topButton":"bottomButton"}`).style.opacity=0.7;
-			if (grip.getBoundingClientRect()["top"]==gutter.getBoundingClientRect()["top"])arrowButtons[0].style.opacity=0.7;
-			if (grip.getBoundingClientRect()["bottom"]==gutter.getBoundingClientRect()["bottom"])arrowButtons[1].style.opacity=0.7;
-			
-			}
-		} 
 	}
-	);return result;	
+	else{
+		// element.querySelector(`${grip.getBoundingClientRect()["bottom"]-grip.getBoundingClientRect()["height"]-yOffset==0?"topButton":"bottomButton"}`).style.opacity=0.7;
+		if (grip.getBoundingClientRect()["top"]==gutter.getBoundingClientRect()["top"])arrowButtons[0].style.opacity=0.7;
+		if (grip.getBoundingClientRect()["bottom"]==gutter.getBoundingClientRect()["bottom"])arrowButtons[1].style.opacity=0.7;
+		}
+	}
+}
+
+function setScrolling (element){	
+	var result=[];
+	element.removeEventListener("mousedown", mouseDownFunction);
+	element.ownerDocument.removeEventListener('mouseup', mouseUpFunction);
+	element.removeEventListener('mousemove', mouseMoveFunction);
+
+	element.addEventListener('mousedown',mouseDownFunction);
+	element.ownerDocument.addEventListener('mouseup',mouseUpFunction);
+	element.addEventListener('mousemove',mouseMoveFunction);
+
+return result;	
 }
 //SCRAPPED. WILL NOT WORK. all calls will be commented out
 function resetScrolling(sidebar,eventCollection){//reset the position of the grip and content and removes the event listeners that were set by setScrolling function.  @0 mousedown event function@1 mouseup event function @2 mousemove event function
@@ -221,7 +239,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				animateText(document.getElementById("subTitle"),0,event.target.id,true);
 				animStart(fadeIn, 208, [document.getElementById("tab2MidmenuWrapper"), 'inline-flex']);//display('tab2MidmenuWrapper','inline-flex');
 				setSideBar(document.getElementById('midMenuSidebar'));
-				scrollbarCollection[scrollbarCollection.length]= setScrolling(document.getElementById('midMenuSidebar'));}
+				scrollbarCollection[scrollbarCollection.length]= setScrolling(document.getElementById('midMenuSidebar'));
+			}
 			Array.from(document.getElementsByClassName("tab2")).forEach((pod)=>{pod.dataset.pressed='false';}) //not a clever fix
 			event.target.dataset.pressed = 'true';
 			activePod = setPod(event.target.id);
