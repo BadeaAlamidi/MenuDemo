@@ -176,12 +176,12 @@ var header;
 var guide;
 var content1Wrapper;
 var tab1Options;
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded',  ()=>  {
 	document.getElementById("tab1Document").contentWindow.addEventListener('keydown', (event) => {if (event.key == 'Escape' && stack.length != 0) { stack.pop().back(); }});
 	// var bgChildren=Array.from(document.getElementById("backgroundSVG").children);
 	var activePod;
 	var currentTab = 'tab1';
-	var scrollbarCollection=[];
+	// var scrollbarCollection=[];
 	Array.from(document.getElementsByClassName("button")).forEach(setButton);// this line was for dynamically appending SVG's to buttonss
 	Array.from(document.querySelectorAll(".bottomButton,.topButton")).forEach(element=>element.appendChild(document.importNode(document.querySelector('template.svgCircle').content,true)));//append circle template
 	Array.from(document.getElementsByClassName("grip")).forEach(gripElement=>{gripElement.appendChild(document.importNode(document.querySelector('template.gripTemplate').content,true))});
@@ -212,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		var bgShapesDirection;//originally intended to undo the translation but was repurposed for a smaller shift magnitued when false
 		Array.from(this.children).forEach((shape)=>{
 			switch(shape.className.baseVal){
+
 				case "bgLine":shape.style.transform=bgShapesDirection?`translate(${Math.random()*2}%,${Math.random()*2}%)`:`translate(${Math.random()*1}%,${Math.random()*1}%)`; break;
 				case "bgCircle":shape.style.transform=bgShapesDirection?`translate(${Math.random()*1}%,${Math.random()*2}%)`:`translate(${Math.random()*1}%,${Math.random()*2}%)`; break;
 			}
@@ -239,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				animateText(document.getElementById("subTitle"),0,event.target.id,true);
 				animStart(fadeIn, 208, [document.getElementById("tab2MidmenuWrapper"), 'inline-flex']);//display('tab2MidmenuWrapper','inline-flex');
 				setSideBar(document.getElementById('midMenuSidebar'));
-				scrollbarCollection[scrollbarCollection.length]= setScrolling(document.getElementById('midMenuSidebar'));
+				/* scrollbarCollection[scrollbarCollection.length]= */setScrolling(document.getElementById('midMenuSidebar'));
 			}
 			Array.from(document.getElementsByClassName("tab2")).forEach((pod)=>{pod.dataset.pressed='false';}) //not a clever fix
 			event.target.dataset.pressed = 'true';
@@ -278,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (event.target.className == "nested button") {
 			event.target.dataset.pressed="true";
 			this.style.pointerEvents="none";
-			console.log(scrollbarCollection);
+			// console.log(scrollbarCollection);
 			document.getElementById('nestedContentSidebar').dataset.scrollable="false";
 			document.getElementById('tab1Document').contentWindow.document.getElementById("contentSidebar").dataset.scrollable="true";//#contentSidebar is the id of an element in an iframe from tab1
 			document.getElementById("tab1DocumentHeader").dataset.pressed = 'true';
@@ -313,12 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
 				});
 				animStart(fadeIn, 128, [document.getElementById('tab1nestedContentWrapper'), 'grid']);
 				setSideBar(document.getElementById("nestedContentSidebar"));
-				 scrollbarCollection[scrollbarCollection.length]=setScrolling(document.getElementById("nestedContentSidebar"));
+				/*  scrollbarCollection[scrollbarCollection.length]=*/setScrolling(document.getElementById("nestedContentSidebar"));
 			}, { once: true });
 		}
 	});
 	document.getElementById("header").addEventListener('click', (event) => {
-		if (event.target.className == 'tab button' && event.target.id != currentTab) {
+		if (event.target.className === 'tab button' && event.target.id !== currentTab) {
 			let pushedButton = event.target;
 			let transitionObject = {};//contains the element that will be displayed, the kind of the display, and the name of the event that will trigger the fadeIn
 			//check for when switching from tab2 to another tab:
@@ -350,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			animateText(document.getElementById("title"),0,event.target.querySelector(".text").textContent);
 			animStart(updateProperty,192,['--guideOpacity',document.getElementById("guide"),true]);
 			// scrollbarCollection.forEach((element)=>{resetScrolling(element);});
-			scrollbarCollection=[];
+			// scrollbarCollection=[];
 			animStart(fadeOut, 192, [Array.from(document.getElementsByClassName("tabContent")), 1, `transTo${pushedButton.id}`]);
 
  

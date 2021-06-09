@@ -1,9 +1,0 @@
-version: "3.9"
-services:
-  web:
-    build: .
-    image: menu-demo
-    container_name: menu-demo
-    hostname: menu-demo
-    ports:
-      - "5000:5000"
