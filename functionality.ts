@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded",()=>{
      },
      {once:true});
     /* ANIMATING THE HEADER */
-    animateText(document.getElementById("title"));
+    animateText(<Element>document.getElementById("title"));
     /* ADDING INTERACTIVITY */
     // for tab2, this will change the pod program text of the selected pod(activepod variable)
     // to the text in the middle menu option
@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                  document.querySelector("template.guideButtonTemplate") as HTMLTemplateElement);
                 // display appropriate message on the header's sub title
                 document.getElementById("subTitle")!.textContent+=": ";
-                animateText(document.getElementById("subTitle"),0,(<DOMMouseEvent>e).target.id,true);
+                animateText(<Element>document.getElementById("subTitle"),0,(<DOMMouseEvent>e).target.id,true);
                 // animate the mid menu with the fade in animation to make it visible
                 animStart(fadeIn, 208, document.getElementById("tab2MidmenuWrapper"), "inline-flex");
                 // make the menu scrollable 
@@ -476,7 +476,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             (<HTMLIFrameElement>document.getElementById("tab1Document"))!.contentWindow!.document.getElementById("contentSidebar")!.dataset.scrollable = "true";
             document.getElementById("tab1DocumentHeader")!.dataset.pressed = "true";
             document.getElementById("subTitle")!.textContent += ": ";
-            animateText(document.getElementById("subTitle"), 0,
+            animateText(<Element> document.getElementById("subTitle"), 0,
             (<DOMMouseEvent>event).target.querySelector('.text')?.textContent, true);
             addToStack({eventName : "backtoNestedContent", 
             back: ()=>{
@@ -504,7 +504,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 (<HTMLElement>option).style.opacity = ""});
                 content1Wrapper?.style.setProperty("--beforeHeight", null);
                 setGuideElements("View the information archives");
-                animateText(document.getElementById("subTitle"), 0, "-Archives");
+                animateText(<Element> document.getElementById("subTitle"), 0, "-Archives");
                 addToStack({
                     eventName : "backTotab1Content",
                 // function to fade tab1Content back in should the user press ESC after choosing an option
@@ -537,7 +537,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         if (pushedTab.className == "tab button" && pushedTab.id != currentTab){
             // contains the element that will be displayed, the kind of the display, 
             // and the name of the event that will trigger the fadeIn
-            let transitionObject = {};
+            let transitionObject = {id : "", displayType : ""};
             // done to remove CSS styling
             document.getElementById(currentTab)!.dataset.pressed = "false";
             currentTab = pushedTab.id;
@@ -545,9 +545,140 @@ document.addEventListener("DOMContentLoaded",()=>{
             pushedTab.dataset.pressed = "true";
             switch(pushedTab.id){
                 // tab specific operations and transitions
-                
+                case "tab1" : 
+                    transitionObject["id"] = "tab1ContentWrapper";
+                    transitionObject["displayType"] = "flex";
+                    // deployed once the changed from tab content has completely faded out
+                    document.addEventListener(`transTo${pushedTab.id}`, ()=>{
+                        filter("tabContent");
+                        content1Wrapper!.style.display = "flex";
+                        animStart(updateWrapper1, 192);
+                        setGuideElements("View various types of acquired data.");
+                        animStart(updateGuide, 192);
+                    }, {once : true});
+                break;
+                case "tab2" :
+                    transitionObject["id"] = "tab2Wrapper";
+                    transitionObject["displayType"] = "flex";
+                    document.addEventListener(pushedTab.id, ()=>{console.log("running event" + pushedTab.id)}, {once:true});
+                    document.addEventListener(`transTo${pushedTab.id}`,()=>{
+                        filter("tabContent");
+                        animStart(fadeIn, 192, document.getElementById(transitionObject["id"]), 
+                        transitionObject["displayType"], 1, pushedTab.id);
+                        animateText(<Element> document.getElementById("subTitle"), 0, "-Pod Programs");
+                        setGuideElements("Select Pod.");
+                        // show the guide after it disappeared as done on line 581
+                        animStart(updateGuide, 192);
+                    }, {once : true});
+                break;
             }
-
+            stack = [];
+            //this is done outside the reset function since active Pod variable is no longer active
+            activePod = setPod();
+            reset();
+            animateText(<Element> document.getElementById("title"), 0, pushedTab.querySelector(".text")?.textContent );
+            // simulate fadeout on the guide bar once the mouse clicks on another tab
+            animStart(updateProperty, 192, "--guideOpacity", document.getElementById("guide"), true);
+            animStart(fadeOut, 192, Array.from(document.getElementsByClassName("tabContent")),
+             1, `transTo${pushedTab.id}`);
         }
     });
 });
+// FUNCTION THAT HANDLES ANIMATIONS. THE PROGRESSION IS BASED OFF THE CURRENT TIME MINUS
+// THE TIME THE ANIMATION WAS INITIATED. THIS GIVES THE BENEFIT OF MAKING THE ANIMATION 
+// "RUN" EVEN WHEN THE USER SWITCHES TO ANOTHER WINDOW, THOUGH THIS ISN'T REALLY NEEDED NOR
+// WAS IT TESTED THOROUGHLY. PROGRESSION IS DONE BY CALLING THE UPDATE FUNCTION IN A RECURSIVE
+// FASHION, WITH THE STOPPING POINT BEING WHEN PLAYBACK (WHICH IS CURRENT TIME - TIME THE ANIMATION STARTED)
+// IS LESS THAN ONE.
+// MORE THAN ONE INSTANCE OF THIS FUNCTION MAY RUN. THE callback FUNCTIONS ALL OCCUR ONCE
+// requestAnimationFrame HAPPENS
+// callback: THE FUNCTION THAT WILL RUN ONCE IT'S TIME TO RE-RENDER THE DOM
+// duration: IN MILLISECONDS, EXPRESSES THE DURATION OF THE ANIMATION
+// ...args: THE ARGUMENTS THAT WILL BE PASSED TO callback, ALONG WITH THE PROGRESSION POINT
+//          OF THE ANIMATION (playback in function body below)
+function animStart(callback : (playback: number, ...args : any)=>void, duration : number, ...args : unknown[]) :void{
+    var timeStarted = Date.now();
+    callback (0, ...args);
+    requestAnimationFrame(function update(){
+		//sometimes playback evaluates more than one
+        let playback : number = Math.min((Date.now() - timeStarted) / duration , 1);
+        callback(playback, ...args);
+        if (playback < 1) requestAnimationFrame(update);
+
+    });
+}
+// animation function passed to animStart. Specifically made for the opacity of tabs1,2,3 & 4
+function updateHeader (playback: number) : void{
+    // guranteed to exist as the even listener attached to header already checks that it's valid
+    header!.style.opacity = playback.toString();
+    // staged animation:
+    if (playback >= 1) animStart(updateHeaderTabs, 319);
+}
+// continuation of updateHeader animation
+function updateHeaderTabs(playback : number) : void{
+    // staged animations to be played in the middle of this animation
+    if (playback > 0.7){
+        content1Wrapper?.dispatchEvent(new Event('wrapper1Anim'));
+        guide?.dispatchEvent(new Event('guideAnim'));
+        document.getElementById("backgroundSVG")?.dispatchEvent(new Event ("animateBg"));
+    }
+    // index checking is done here to simulate the game's animation. though, this doesn't
+    // seem to matter given the duration of the animation (which is 319)
+    headerChildren?.forEach((button, index)=>{
+        if (index == 0) (<HTMLElement>button)!.style.opacity = playback.toString();
+        else if (index == 0) (<HTMLElement>button)!.style.opacity = (playback + (playback / 0.9)).toString();
+        else (<HTMLElement>button)!.style.opacity = (playback + (playback / index)).toString();
+    });
+}
+function updateWrapper1(playback : number){
+    if (playback == 1){
+        tab1Options?.forEach((option, index)=>{
+            setTimeout(animStart, 64 * index, updateTab1Options, 200, option, index);
+            animateText(option, index * 64);
+        });
+    }
+    content1Wrapper!.style.setProperty("--beforeHeight", Math.pow(playback, 0.1) * 100 + "%");
+    content1Wrapper!.style.opacity = playback.toString();
+}
+function updateTab1Options(playback: number, option: HTMLElement, index: number){
+    option.style.opacity = (Math.pow(playback, 0.5)).toString();
+    option.style.right = 14 * (1 - Math.pow(playback, 0.1)) + "%";
+    option.setAttribute("option", `${playback}`); // this was for debugging
+}
+function updateGuide(playback : number){
+    // this function only runs when guide is guaranteed to exist, making the following assertion safe
+    guide!.style.setProperty("--guideOpacity", `${playback}`);
+    guide!.style.bottom = 4.3 + (4 * Math.pow(playback, 0.5)) + "vh";
+}
+function updateGuideButton(playback : number){
+    // the following assertion is only true if this script is used for index.html
+    (<HTMLElement>guide!.querySelector("#guideButtons")).style.top = 100 - (Math.pow(playback, 0.5)) + "%";
+    (<HTMLElement>guide!.querySelector("#guideButtons")).style.opacity = playback.toString();
+}
+function animateText(element: Element, delay? : number, string?: string | null, keepText?: true | false){
+    let index = 0;
+    let print = false;
+    let textContainer = element.querySelector(".text") || element;
+    let currentText = keepText? textContainer.textContent : "";
+    let input = string? string : textContainer.textContent;
+    if (!keepText) textContainer.textContent = "";
+    setTimeout(()=>{
+        let intervalId = setInterval(()=>{
+            if (input && index != input.length - 1){
+                // add a letter every 50 * 2 ms
+                currentText += print ? input[index] : "";
+                // visual effect that simulates the games where text is being generated and
+                // the last letter, as the string is being built, is a random letter from
+                // the already established letters in the string
+                textContainer.textContent = currentText + 
+                                            (index + 1 < input.length - 1 ? input[getRandomInteger(0, input.length - 1)] : "");
+                if (print) ++index;
+                print = !print;
+            } else {
+                // the string has been built fully with one letter missing
+                if (input) textContainer.innerHTML += input[input.length - 1];
+                clearInterval(intervalId);
+            }
+        }, 50);
+    }, delay);
+}
