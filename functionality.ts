@@ -25,7 +25,7 @@ let stack : Array<layer> = [];
 // appends to the stack array the passed object. 
 // ensures no duplicates are added to the stack by checking the layer's EventName with the last entry
 function addToStack(object: layer): void{
-    if (object.eventName !== stack[stack.length - 1].eventName)
+    if (object.eventName !== stack[stack.length - 1]?.eventName)
         stack.push(object);
 }
 
@@ -247,6 +247,11 @@ function setBackgroundShapes(radius: number | undefined) : void {
         }
     );
 }
+
+// the following adds the ability to pop from the global stack[] variable
+window.addEventListener('keydown', (event) => {
+	if (event.key == 'Escape' && stack.length != 0) { stack.pop()!.back(); }
+});
 
 let headerChildren : Element[] | null;
 let header : HTMLElement | null;
@@ -596,7 +601,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 // duration: IN MILLISECONDS, EXPRESSES THE DURATION OF THE ANIMATION
 // ...args: THE ARGUMENTS THAT WILL BE PASSED TO callback, ALONG WITH THE PROGRESSION POINT
 //          OF THE ANIMATION (playback in function body below)
-function animStart(callback : (playback: number, ...args : any)=>void, duration : number, ...args : unknown[]) :void{
+function animStart(callback : (playback: number, ...args : any[])=>void, duration : number, ...args : unknown[]) :void{
     var timeStarted = Date.now();
     callback (0, ...args);
     requestAnimationFrame(function update(){
@@ -681,4 +686,108 @@ function animateText(element: Element, delay? : number, string?: string | null, 
             }
         }, 50);
     }, delay);
+}
+// function that fades out a collection of elements provided on the 2nd parameter
+// this function may trigger an event as it runs.
+// @playback    how far the animation is in progression
+// @elements    HTML element collection of elements that get faded out
+// @eventTriggerTime    the point of the fadeout progression in which another event will trigger
+//                      generally, these events include clean up coupled with a fadeIn animation
+// @eventName   a string that represents the name of the extra event. this is used in tandem with 
+//              dispatchEvent()
+// @backFlag    this parameter is set to true when this animation is being invoked as a 
+//              "back" component in one of the global stack array of objects
+//              this seems to be used when only one element is provided in the elements array
+function fadeOut (playback: number, elements : HTMLElement[], eventTriggerTime : number, eventName : string, backFlag? : Boolean) : void{
+    elements.forEach(element => {element.style.opacity = (1 - Math.pow(playback, 0.5)).toString();
+    });
+    // this is typically true when the element that is being faded out is positioned absolutely:
+    if (playback >= eventTriggerTime) document.dispatchEvent(new Event(eventName));
+    if (playback == 1 && backFlag) elements[0].style.display = "none";
+}
+// this function fades in a single html element by changing its opacity. this function may also
+// deplay an event as it fades the element in
+// playback     the progression of the animation (starts at 0 and ends at 1 as with all animations)
+// element      the html element to fade in
+// dispType     a string that represents that kind of display the element should have as it appears
+//              this must be a valid css value for the display property
+// eventTriggerTime     same as fadeOut 
+// eventName    same as fadeOut 
+function fadeIn(playback : number, element : HTMLElement, dispType : string, eventTriggerTime? : number, eventName? : string):void{
+    element.style.opacity = Math.pow(playback, 0.5).toString();
+    if (playback == 0) element.style.display = dispType;
+    // check if the last two parameters are provided 
+    if ((eventName && eventTriggerTime) && playback >= eventTriggerTime) document.dispatchEvent(new Event(eventName));
+}
+// this function will access elements' CSS variables and alter them according to progression
+// of the playback variable
+// @playback    progression of animation
+// @property    CSS variable name
+// @element    element whose CSS varialbe will be changed
+// @decreasing? when true, the CSS variable will decrease gradually instead of increasing
+function updateProperty(playback : number, property: string, element : HTMLElement, decreasing? : Boolean) : void{
+    decreasing? element.style.setProperty(property, (1 - (Math.pow(playback, 0.5))).toString() ) : 
+                element.style.setProperty(property, (Math.pow(playback, 0.5)).toString() ) ;
+}
+// this function will widen the "windows" that show the top and bottom banners
+// in progression with respect of the playback parameter
+// @playback    progression of animation
+// @topBanner   HTMLElement of the top banner
+// @bottomBanner   HTMLElement of the bottom banner
+function updateBanner(playback : number, topBanner : HTMLElement, bottomBanner : HTMLElement) : void{
+    // scripted animation hard coded to run when the animation is 38% done:
+    if (playback > 0.38) document.getElementById("header")?.dispatchEvent(new Event("playHeaderAnim"));
+    topBanner.style.width = Math.pow(playback, 0.5) * 100 + "%";
+    bottomBanner.style.width = Math.pow(playback, 0.5) * 100 + "%";
+}
+// this function is an animation for moving background shapes at the beginning of the 
+// page
+// @playback    animation progression
+// @topLeftCircle   top left circle of the background shapes
+// @botRightCircle  bottom right circle of the background shapes
+// @dashOffset      value to a CSS property that's used to simulate the circles filling 
+//                  animation as shown in the game
+// @topLine         one of the top lines of the background shapes
+// @botLine         one of the bottom lines of the background shapes
+// @xMagnitude      SVG property to resize lines
+// @yMagnitude      //
+// @offset          offset for the lines x2 SVG property for lines that don't begin in 
+//                  the corner
+function updateBgShapes(playback : number, 
+    topLeftCircle : SVGElement, 
+    botRightCircle : SVGElement, 
+    dashOffset : number,
+    topLine : SVGElement,
+    botLine : SVGElement,
+    xMagnitude : number,
+    yMagnitude : number,
+    offset : number    ) : void {
+        let rootedPlayback = Math.pow(playback , 0.5);
+        if (playback <= 0.5) document.getElementById("backgroundSVG")?.dispatchEvent(new Event("animateSmallCircles"));
+        if (playback == 1) document.getElementById("backgroundSVG")?.dispatchEvent(new Event("animateThirdLines"));
+        topLeftCircle.style.strokeDashoffset = `${dashOffset * 3 - 2 * dashOffset * rootedPlayback}`;
+        botRightCircle.style.strokeDashoffset = (dashOffset - 2*dashOffset*rootedPlayback).toString();
+        topLine.setAttributeNS(null, "x2", `${rootedPlayback * xMagnitude + offset}%`);
+        topLine.setAttributeNS(null, "y2", `${rootedPlayback * yMagnitude}%`);
+    // bottom lines have decreasing coordinates as they spring up from the bottom of the screen
+        botLine.setAttributeNS(null, "x2", `${100 - rootedPlayback * xMagnitude - offset}%`);
+        botLine.setAttributeNS(null, "y2", `${100 - rootedPlayback * yMagnitude}%`);
+    }
+//
+//function for resetting the tab information when switching
+//
+function reset() {
+	tab1Options?.forEach((option) => { 
+        (<HTMLElement>option).style.right = "";  
+        (<HTMLElement>option).style.opacity = "";
+    });
+	content1Wrapper?.style.setProperty('--beforeHeight', null);
+	document.getElementById("tab2Content")?.style.setProperty('--afterVisibility',null);
+	guide!.querySelector("#guideButtons")!.innerHTML="";
+	document.getElementById('tab1DocumentHeader')!.dataset.pressed="false";
+	Array.from(document.getElementsByClassName("tab2")).forEach((pod)=>{(<HTMLElement>pod).dataset.pressed='false'});
+	Array.from(document.getElementsByClassName("nested")).forEach((archiveButton)=>{(<HTMLElement>archiveButton).dataset.pressed='false';});
+	document.getElementById("nestedContentSidebar")!.dataset.scrollable="true";
+	document.getElementById("tab1nestedContent")!.style.pointerEvents="";
+	document.getElementById("subTitle")!.textContent="";
 }
