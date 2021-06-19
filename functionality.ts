@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         document.getElementById("topThirdLine"),
         document.getElementById("bottomThirdLine"),46,86);
     },{once:true});
-    header = document.getElementById("tab1ContentWrapper");
+    header = document.getElementById("header");
     if (header) headerChildren = Array.from(header.children);
     content1Wrapper = document.getElementById("tab1ContentWrapper");
     tab1Options = Array.from(document.getElementsByClassName("tab1"));
