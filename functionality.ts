@@ -98,11 +98,10 @@ function setPodProgram(programName: string, activePod: HTMLElement | null) : voi
 // a template in index.html into a button element 
 function setButton(element: Element): void{
     let temp: string | null = element.textContent;
+    element.innerHTML  = "";
     if (temp){
         //adds the template to the button div
-        element.appendChild(document.importNode(
-            document.querySelector('template.buttonSetting')!,true
-        ));
+        element.appendChild(document.importNode((<HTMLTemplateElement>document.querySelector('template.buttonSetting')).content,true));
         //moves the text content of the previous to the newly fashioned button element
         let buttonText : HTMLElement | null= element.querySelector(".text");
         (buttonText) && (buttonText.textContent = temp);
@@ -113,12 +112,10 @@ function setButton(element: Element): void{
 function setSideBar(sidebar : HTMLElement | null) : void {
     if (sidebar){
         let viewportHeight = sidebar.querySelector(".optionsViewport")?.getBoundingClientRect().height;
-        let containerHeight = sidebar.querySelector(".optionsViewport")?.getBoundingClientRect().height;
+        let containerHeight = sidebar.querySelector(".optionsContainer")?.getBoundingClientRect().height;
         let sidebarGrip:HTMLElement | null = sidebar.querySelector(".grip");
-        if (viewportHeight && containerHeight){
-            let sidebarHeight: Number = viewportHeight / containerHeight;
-            (sidebarGrip) && (sidebarGrip.style.height = sidebarHeight.toString() ); 
-        }
+        (sidebarGrip && viewportHeight && containerHeight) && (sidebarGrip.style.height = (viewportHeight / containerHeight) *100 +"%" ); 
+        
     } else console.log("sidebar parameter is null");
 }
 
@@ -170,7 +167,7 @@ function mouseDown(e:DOMMouseEvent ):void{
 // an event listener parameter that is triggered when the mouse moves after dragging a scrolling
 // grip.
 function mouseMove(e:DOMMouseEvent):void{
-    let element = e.target;
+    let element = e.currentTarget;
     let grip = element.querySelector('.grip') as HTMLElement;
     let gutter = element.querySelector('.sideBarGutter') as HTMLElement;
     const yOffset = gutter!.getBoundingClientRect()["top"];
@@ -215,7 +212,7 @@ function setScrolling(element : HTMLElement | null) : void{
 // function to set the top and bottom simple banners
 // determines the banners width 
 function setBanners() : void {
-    if (document.getElementById("tobBanner") && document.getElementById("bottomBanner"))
+    if (document.getElementById("topBanner") && document.getElementById("bottomBanner"))
     {   let topBannerSVG=document.getElementById("topBanner")!.querySelector(".patternContainer") as HTMLElement;
         let bottomBannerSVG=document.getElementById("bottomBanner")!.querySelector(".patternContainer") as HTMLElement;
 	    let svgWidth=window.innerWidth*0.9-(window.innerWidth*0.9%55)+10;
@@ -329,10 +326,11 @@ document.addEventListener("DOMContentLoaded",()=>{
                 topThirdLine.setAttributeNS(null,'y2',`${Math.pow(playback,0.5)*yMagnitude+6}%`);
                 bottomThirdLine.setAttributeNS(null,'x2',`${100-Math.pow(playback,0.5)*xMagnitude}%`);
                 bottomThirdLine.setAttributeNS(null,'y2',`${100-Math.pow(playback,0.5)*yMagnitude-6}%`);
+       		//the +-6 is done since the top and bottom lines respectively begin with 0%+6% and 100%-6% on y axis
         },
         666,
         document.getElementById("topThirdLine"),
-        document.getElementById("bottomThirdLine"),46,86);
+        document.getElementById("bottomThirdLine"),43,86);
     },{once:true});
     header = document.getElementById("header");
     if (header) headerChildren = Array.from(header.children);
