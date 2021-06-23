@@ -404,6 +404,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 animStart(fadeIn, 208, document.getElementById("tab2MidmenuWrapper"), "inline-flex");
                 // make the menu scrollable 
                 setSideBar(document.getElementById("midMenuSidebar"));
+                setScrolling(document.getElementById("midMenuSidebar"));
             }
             // set all of the pod SPAN elements to not pressed and set the clicked SPAN to be
             // the chosen pod
@@ -435,7 +436,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     document.getElementById("tab2Content")?.addEventListener('mouseover', (event) => {
 		// color the SPAN pod element that is being hovered over if the mid menu is invisible
         if ((<DOMMouseEvent>event).target.nodeName == "SPAN" &&
-         document.getElementById("tab2MidmenuWrapper")?.style.display == "none") 
+         document.getElementById("tab2MidmenuWrapper")?.style.display == "none")
          {
             // set the 3rd panel to display the pod program on the SPAN element being hovered over
 			displayDescription('./descriptions/demo' + (<DOMMouseEvent>event).target.dataset.program?.slice(6) + '.html');
@@ -510,10 +511,9 @@ document.addEventListener("DOMContentLoaded",()=>{
                 animateText(<Element> document.getElementById("subTitle"), 0, "-Archives");
                 addToStack({
                     eventName : "backTotab1Content",
-                // function to fade tab1Content back in should the user press ESC after choosing an option
+                    // function to fade tab1Content back in should the user press ESC after choosing an option
                     back : function (){
-                        animStart (fadeOut, 128, [document.getElementById("tab1nestedContentWrapper")], 
-                        0.7, "backTotab1Content", true);
+                        animStart (fadeOut, 128, [document.getElementById("tab1nestedContentWrapper")], 0.7, "backTotab1Content", true);
                         // triggered after the above animation finishes
                         document.addEventListener("backTotab1Content", ()=>{
                             if (content1Wrapper)  content1Wrapper.style.display = "flex";
@@ -528,7 +528,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 "grid");
                 setSideBar(document.getElementById("nestedContentSidebar"));
                 setScrolling(document.getElementById("nestedContentSidebar"));
-            }, {once:true});
+            }, {once : true});
         }
     });
     // HEADER INTERACTIVITY (TAB1,2,3...)

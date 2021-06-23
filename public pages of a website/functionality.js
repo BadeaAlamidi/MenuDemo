@@ -337,6 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 animStart(fadeIn, 208, document.getElementById("tab2MidmenuWrapper"), "inline-flex");
                 // make the menu scrollable 
                 setSideBar(document.getElementById("midMenuSidebar"));
+                setScrolling(document.getElementById("midMenuSidebar"));
             }
             // set all of the pod SPAN elements to not pressed and set the clicked SPAN to be
             // the chosen pod
