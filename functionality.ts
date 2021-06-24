@@ -128,7 +128,7 @@ function setSideBar(sidebar : HTMLElement | null) : void {
 //                   that can be currently used in the UI
 // Note: currently, only Esc is used 
 
-function setGuideElements(instructionText?: string, documentFragment?: HTMLTemplateElement ): void{
+function setGuideElements(instructionText?: string, documentFragment?: DocumentFragment ): void{
     // guide  is  checked  to exist before this function is called, warranting the '!'
     // on the following two lines. 
     //the query selector methods assume that this script is designed Exclusively for 
@@ -137,12 +137,11 @@ function setGuideElements(instructionText?: string, documentFragment?: HTMLTempl
     guideButtons.innerHTML = "";
     if (instructionText) guide!.querySelector('#instruction')!.textContent = instructionText;   
     
-    //the following defaults to the Esc button template in index.html. once new ones are created, 
     if (documentFragment){
         //I HAVE TO GET RID OF THIS. STOP PASSING 'true' TO THIS FUNCTION'S 2ND PARAMETER
         // if (documentFragment === true as unknown)
             // documentFragment = document.querySelector("template.guideButtonTemplate") as HTMLTemplateElement;
-        guideButtons.appendChild(document.importNode(documentFragment.content, true));
+        guideButtons.appendChild(document.importNode(documentFragment, true));
         animStart(updateGuideButton,289);
     }
 }
@@ -396,7 +395,7 @@ document.addEventListener("DOMContentLoaded",()=>{
             if (document.getElementById("tab2MidmenuWrapper")?.style.display === "none"){
                 // display appropriate message on the guide bar
                 setGuideElements("Select Pod program to equip.",
-                 document.querySelector("template.guideButtonTemplate") as HTMLTemplateElement);
+                 (<HTMLTemplateElement>document.querySelector("template.guideButtonTemplate")).content);
                 // display appropriate message on the header's sub title
                 document.getElementById("subTitle")!.textContent+=": ";
                 animateText(<Element>document.getElementById("subTitle"),0,(<DOMMouseEvent>e).target.id,true);
@@ -507,7 +506,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 tab1Options?.forEach((option)=>{(<HTMLElement>option).style.right = "";
                 (<HTMLElement>option).style.opacity = ""});
                 content1Wrapper?.style.setProperty("--beforeHeight", null);
-                setGuideElements("View the information archives");
+                setGuideElements("View the information archives", (<HTMLTemplateElement>document.querySelector("template.guideButtonTemplate")).content);
                 animateText(<Element> document.getElementById("subTitle"), 0, "-Archives");
                 addToStack({
                     eventName : "backTotab1Content",
@@ -655,7 +654,7 @@ function updateGuide(playback : number){
 }
 function updateGuideButton(playback : number){
     // the following assertion is only true if this script is used for index.html
-    (<HTMLElement>guide!.querySelector("#guideButtons")).style.top = 100 - (Math.pow(playback, 0.5)) + "%";
+    (<HTMLElement>guide!.querySelector("#guideButtons")).style.top = 100 - (Math.pow(playback, 0.5) * 100) + "%";
     (<HTMLElement>guide!.querySelector("#guideButtons")).style.opacity = playback.toString();
 }
 function animateText(element: Element, delay? : number, string?: string | null, keepText?: true | false){
