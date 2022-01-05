@@ -44,7 +44,7 @@ const server = http.createServer((req,res)=>{
 					res.writeHead(500); res.end(`server error: ${err}`);
 				}
 			} else {
-				res.writeHead(200,{'Content-Type': contentType});
+				res.writeHead(200,{'Pragma': 'public', 'Cache-Control': 'public, max-age=2592000', 'Content-Type': contentType});
 				res.end(content);
 			}
 		}
